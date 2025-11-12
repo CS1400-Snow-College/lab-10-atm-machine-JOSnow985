@@ -5,9 +5,9 @@ Console.Clear();
 Console.WriteLine("The Bank\u2122's ATM");
 Console.WriteLine("~ Where your money is safer ~");
 
-var customerDataBase = File.ReadAllLines("bank.txt").Select(line => line.Split(',').ToList()).ToList();
+var customerDataBase = loadBankCustomers("bank.txt");
 
-// Login block
+// Login
 int userIndex = validateUser(customerDataBase);
 if (userIndex == -1)
 {
@@ -15,8 +15,13 @@ if (userIndex == -1)
 }
 else
 {
-    drawHeader();
-    Console.WriteLine("User Successfully Validated");
+    bankMenu(customerDataBase, 0, userIndex);
+}
+
+static List<List<string>> loadBankCustomers(string filepath)
+{
+    var listOfLists = File.ReadAllLines(filepath).Select(line => line.Split(',').ToList()).ToList();
+    return listOfLists;
 }
 
 static void saveBankCustomers(string filepath, List<List<string>> listToSave)
@@ -30,7 +35,7 @@ static void saveBankCustomers(string filepath, List<List<string>> listToSave)
         writeList.Add(lineBuilder.ToString().TrimEnd(','));
     }
     string[] dataArray = writeList.ToArray();
-    File.WriteAllLines("bank.txt", dataArray);
+    File.WriteAllLines(filepath, dataArray);
 }
 
 static int findUser(List<List<string>> dataList)
@@ -129,4 +134,64 @@ static void drawHeader()
     Console.Clear();
     Console.WriteLine("The Bank\u2122's ATM");
     Console.WriteLine("~ Where your money is safer ~");
+    Console.WriteLine();
+}
+
+static void bankMenu(List<List<string>> dataList, int requestedMenu, int userIndex)
+{
+    while (requestedMenu == 0)
+    {
+        requestedMenu = mainMenu(dataList, userIndex);
+    }
+    Console.WriteLine(requestedMenu);
+}
+
+static int mainMenu(List<List<string>> dataList, int userIndex)
+{
+    string[] mainMenuArray = [  $"Welcome to your The Bank\u2122 account, {dataList[userIndex][0]}!",
+                                $"What can we help you with today?",
+                                "1. Check Balance", 
+                                "2. Withdraw", 
+                                "3. Deposit", 
+                                "4. Display last 5 transactions", 
+                                "5. Quick Withdraw $40", 
+                                "6. Quick Withdraw $100",
+                                "7. End current session"
+                            ];
+    int firstOptionIndex = 2;
+    return optionSelector(mainMenuArray, firstOptionIndex);
+}
+
+static int optionSelector(string[] menuArray, int firstOptionIndex)
+{
+    int optionHighlighted = firstOptionIndex;
+    while (true)
+    {
+        drawHeader();
+        for (int index = 0; index < menuArray.Length; index++)
+        {
+            if (optionHighlighted == index)
+            {
+                Console.BackgroundColor = ConsoleColor.Gray;
+                Console.ForegroundColor = ConsoleColor.Black;
+            }
+
+            Console.WriteLine(menuArray[index]);
+            
+            if (optionHighlighted == index)
+            {
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+        }
+        ConsoleKey userInput = Console.ReadKey(true).Key;
+        if (userInput == ConsoleKey.UpArrow && optionHighlighted > firstOptionIndex)
+            optionHighlighted--;
+        else if (userInput == ConsoleKey.DownArrow && optionHighlighted <= menuArray.Length - firstOptionIndex)
+            optionHighlighted++;
+        else if (userInput == ConsoleKey.Enter)
+            return optionHighlighted;
+        else
+            Console.Beep();
+    }
 }
