@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "lab-10-atm-machine-JOSnow985/1.0.0": {
+        "runtime": {
+          "lab-10-atm-machine-JOSnow985.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "lab-10-atm-machine-JOSnow985/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

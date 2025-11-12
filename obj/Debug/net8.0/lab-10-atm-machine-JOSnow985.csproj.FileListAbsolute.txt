@@ -1,0 +1,15 @@
+/home/nobaraneko/Documents/CS1400/lab-10-atm-machine-JOSnow985/bin/Debug/net8.0/lab-10-atm-machine-JOSnow985
+/home/nobaraneko/Documents/CS1400/lab-10-atm-machine-JOSnow985/bin/Debug/net8.0/lab-10-atm-machine-JOSnow985.deps.json
+/home/nobaraneko/Documents/CS1400/lab-10-atm-machine-JOSnow985/bin/Debug/net8.0/lab-10-atm-machine-JOSnow985.runtimeconfig.json
+/home/nobaraneko/Documents/CS1400/lab-10-atm-machine-JOSnow985/bin/Debug/net8.0/lab-10-atm-machine-JOSnow985.dll
+/home/nobaraneko/Documents/CS1400/lab-10-atm-machine-JOSnow985/bin/Debug/net8.0/lab-10-atm-machine-JOSnow985.pdb
+/home/nobaraneko/Documents/CS1400/lab-10-atm-machine-JOSnow985/obj/Debug/net8.0/lab-10-atm-machine-JOSnow985.GeneratedMSBuildEditorConfig.editorconfig
+/home/nobaraneko/Documents/CS1400/lab-10-atm-machine-JOSnow985/obj/Debug/net8.0/lab-10-atm-machine-JOSnow985.AssemblyInfoInputs.cache
+/home/nobaraneko/Documents/CS1400/lab-10-atm-machine-JOSnow985/obj/Debug/net8.0/lab-10-atm-machine-JOSnow985.AssemblyInfo.cs
+/home/nobaraneko/Documents/CS1400/lab-10-atm-machine-JOSnow985/obj/Debug/net8.0/lab-10-atm-machine-JOSnow985.csproj.CoreCompileInputs.cache
+/home/nobaraneko/Documents/CS1400/lab-10-atm-machine-JOSnow985/obj/Debug/net8.0/lab-10-atm-machine-JOSnow985.sourcelink.json
+/home/nobaraneko/Documents/CS1400/lab-10-atm-machine-JOSnow985/obj/Debug/net8.0/lab-10-atm-machine-JOSnow985.dll
+/home/nobaraneko/Documents/CS1400/lab-10-atm-machine-JOSnow985/obj/Debug/net8.0/refint/lab-10-atm-machine-JOSnow985.dll
+/home/nobaraneko/Documents/CS1400/lab-10-atm-machine-JOSnow985/obj/Debug/net8.0/lab-10-atm-machine-JOSnow985.pdb
+/home/nobaraneko/Documents/CS1400/lab-10-atm-machine-JOSnow985/obj/Debug/net8.0/lab-10-atm-machine-JOSnow985.genruntimeconfig.cache
+/home/nobaraneko/Documents/CS1400/lab-10-atm-machine-JOSnow985/obj/Debug/net8.0/ref/lab-10-atm-machine-JOSnow985.dll
