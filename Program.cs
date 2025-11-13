@@ -39,13 +39,14 @@ else
                     transactionRecorder(customerDataBase, userIndex, true, fundsToWithdraw);
                     customerDataBase[userIndex][2] = Convert.ToString(decimal.Parse(customerDataBase[userIndex][2]) - fundsToWithdraw);
                     saveBankCustomers("bank.txt", customerDataBase);
+                    fundsToWithdraw = 0;
 
                     // A little theater to make it look nice
                     drawHeader();
                     Console.WriteLine("Dispensing funds...");
                     Thread.Sleep(2000);
                     drawHeader();
-                    Console.WriteLine($"Funds dispensed. Your remaining balance is: ${customerDataBase[userIndex][2]}");
+                    Console.WriteLine($"Funds dispensed. Your remaining balance is: ${decimal.Parse(customerDataBase[userIndex][2]):F2}");
                     Console.WriteLine("Press any key to continue.");
                     Console.ReadKey(true);
                 }
@@ -59,12 +60,13 @@ else
                     transactionRecorder(customerDataBase, userIndex, false, fundsToDeposit);
                     customerDataBase[userIndex][2] = Convert.ToString(decimal.Parse(customerDataBase[userIndex][2]) + fundsToDeposit);
                     saveBankCustomers("bank.txt", customerDataBase);
+                    fundsToDeposit = 0;
 
                     drawHeader();
                     Console.WriteLine("Depositing funds...");
                     Thread.Sleep(2000);
                     drawHeader();
-                    Console.WriteLine($"Funds deposited. Your new balance is: ${customerDataBase[userIndex][2]}");
+                    Console.WriteLine($"Funds deposited. Your new balance is: ${decimal.Parse(customerDataBase[userIndex][2]):F2}");
                     Console.WriteLine("Press any key to continue.");
                     Console.ReadKey(true);
                 }
@@ -77,14 +79,52 @@ else
 
             // Quick Withdraw $40
             case 5:
+                (requestedMenu, fundsToWithdraw) = quickWithdraw(customerDataBase, userIndex, 40.00m);
+                if (fundsToWithdraw > 0)
+                {
+                    transactionRecorder(customerDataBase, userIndex, true, fundsToWithdraw);
+                    customerDataBase[userIndex][2] = Convert.ToString(decimal.Parse(customerDataBase[userIndex][2]) - fundsToWithdraw);
+                    saveBankCustomers("bank.txt", customerDataBase);
+                    fundsToWithdraw = 0;
+
+                    drawHeader();
+                    Console.WriteLine("Quickly dispensing funds...");
+                    Thread.Sleep(1800);
+                    drawHeader();
+                    Console.WriteLine($"Funds dispensed. Your remaining balance is: ${decimal.Parse(customerDataBase[userIndex][2]):F2}");
+                    Console.WriteLine("Press any key to continue.");
+                    Console.ReadKey(true);
+                }
                 break;
 
             // Quick Withdraw $100
             case 6:
+                (requestedMenu, fundsToWithdraw) = quickWithdraw(customerDataBase, userIndex, 100.00m);
+                if (fundsToWithdraw > 0)
+                {
+                    transactionRecorder(customerDataBase, userIndex, true, fundsToWithdraw);
+                    customerDataBase[userIndex][2] = Convert.ToString(decimal.Parse(customerDataBase[userIndex][2]) - fundsToWithdraw);
+                    saveBankCustomers("bank.txt", customerDataBase);
+                    fundsToWithdraw = 0;
+
+                    drawHeader();
+                    Console.WriteLine("Quickly dispensing funds...");
+                    Thread.Sleep(1800);
+                    drawHeader();
+                    Console.WriteLine($"Funds dispensed. Your remaining balance is: ${decimal.Parse(customerDataBase[userIndex][2]):F2}");
+                    Console.WriteLine("Press any key to continue.");
+                    Console.ReadKey(true);
+                }
                 break;
             
             // End Current Session
             case 7:
+                // Save lists to database
+                saveBankCustomers("bank.txt", customerDataBase);
+                Console.Clear();
+                Console.WriteLine("Thank you for banking with The Bank\u2122!");
+                Console.WriteLine("~ Where your money is safer ~");
+                Console.WriteLine("Goodbye!");
                 break;
 
             default:
@@ -92,8 +132,9 @@ else
 
         }
     }
-    Console.WriteLine(requestedMenu);
 }
+
+// Methods
 
 // Loads csv into a list of lists of strings, splits by ,
 static List<List<string>> loadBankCustomers(string filepath)
@@ -293,13 +334,11 @@ static (bool parseSuccess, decimal fundsInput) handleMoneyInput()
     return (false, 0);
 }
 
-// Main Menu Function Methods
-
 // Just shows the balance and kicks us back to the main menu
 static int checkBalance(List<List<string>> dataList, int userIndex)
 {
     drawHeader();
-    Console.WriteLine($"{dataList[userIndex][0]}, your current balance is: $ {dataList[userIndex][2]}\n Please press any key to return to the main menu.");
+    Console.WriteLine($"{dataList[userIndex][0]}, your current balance is: ${decimal.Parse(dataList[userIndex][2]):F2}\nPlease press any key to return to the main menu.");
     Console.ReadKey(true);
     return 0;
 }
@@ -312,7 +351,7 @@ static (int requestedMenu, decimal fundsToWithdraw) withdrawFunds(List<List<stri
     while (parseSuccess == false)
     {
         drawHeader();
-        Console.WriteLine($"{dataList[userIndex][0]}, your current balance is: $ {dataList[userIndex][2]}\nPlease enter an amount to withdraw that is less than or equal to your current balance.");
+        Console.WriteLine($"{dataList[userIndex][0]}, your current balance is: ${decimal.Parse(dataList[userIndex][2]):F2}\nPlease enter an amount to withdraw that is less than or equal to your current balance.");
         (parseSuccess, fundsToWithdraw) = handleMoneyInput();
         // Value can't be less than 0
         if (parseSuccess == true && fundsToWithdraw < 0)
@@ -337,7 +376,7 @@ static (int requestedMenu, decimal fundsToWithdraw) withdrawFunds(List<List<stri
         else
         {
             parseSuccess = false;
-            Console.WriteLine("That input wasn't properly recognized,\nplease enter an amount to withdraw.");
+            Console.WriteLine("That input wasn't recognized,\nplease enter an amount to withdraw.");
             Console.WriteLine("Press any key to continue.");
             Console.ReadKey(true);
         }
@@ -354,7 +393,7 @@ static (int requestedMenu, decimal fundsToDeposit) depositFunds(List<List<string
     while (parseSuccess == false)
     {
         drawHeader();
-        Console.WriteLine($"{dataList[userIndex][0]}, your current balance is: $ {dataList[userIndex][2]}\nPlease enter an amount to withdraw that is less than or equal to your current balance.");
+        Console.WriteLine($"{dataList[userIndex][0]}, your current balance is: ${decimal.Parse(dataList[userIndex][2]):F2}\nPlease enter the amount you're depositing.");
         (parseSuccess, fundsToDeposit) = handleMoneyInput();
         if (parseSuccess == true && fundsToDeposit < 0)
         {
@@ -377,6 +416,33 @@ static (int requestedMenu, decimal fundsToDeposit) depositFunds(List<List<string
     return (0, fundsToDeposit);
 }
 
+static (int requestedMenu, decimal fundsToMove) quickWithdraw(List<List<string>> dataList, int userIndex, decimal fundsToMove)
+{
+    // Value can't be less than what they have in the account, no overdrafts
+    if (fundsToMove > decimal.Parse(dataList[userIndex][2]))
+    {
+        drawHeader();
+        Console.WriteLine($"Unfortunately, ${fundsToMove:F2} is more than your current balance.\nYou are unable to use Quick Withdraw for ${fundsToMove:F2} at this time.");
+        Console.WriteLine("Press any key to continue.");
+        Console.ReadKey(true);
+        return (0, 0);
+    }
+    // If the user has the balance for it, returns quick withdraw amount requested
+    else if (fundsToMove <= decimal.Parse(dataList[userIndex][2]))
+    {
+        return (0, fundsToMove);
+    }
+    // Catch for something that's not in the above cases
+    else
+    {
+        drawHeader();
+        Console.WriteLine($"An error prevented you from withdrawing ${fundsToMove:F2},\nplease try again.");
+        Console.WriteLine("Press any key to continue.");
+        Console.ReadKey(true);
+        return (0, 0);
+    }
+}
+
 // First in first out recording of transactions on user's line in the csv
 static void transactionRecorder(List<List<string>> dataList, int userIndex, bool withdrawing, decimal fundsToMove)
 {
@@ -389,15 +455,16 @@ static void transactionRecorder(List<List<string>> dataList, int userIndex, bool
     dataList[userIndex][5] = dataList[userIndex][4];
     dataList[userIndex][4] = dataList[userIndex][3];
     if (withdrawing == true)
-        dataList[userIndex][3] = $"{DateTime.Now:MM/dd/yy - h:m:ss tt} - Withdrawal of ${Convert.ToString(fundsToMove)}, remaining balance: ${Convert.ToString(decimal.Parse(dataList[userIndex][2]) - fundsToMove)}";
+        dataList[userIndex][3] = $"{DateTime.Now:MM/dd/yy hh:mm:ss tt} | -${fundsToMove,-8:F2} | Resulting Balance: ${decimal.Parse(dataList[userIndex][2]) - fundsToMove:F2}";
     else
-        dataList[userIndex][3] = $"{DateTime.Now:MM/dd/yy - h:m:ss tt} - Deposit of ${Convert.ToString(fundsToMove)}, new balance: ${Convert.ToString(decimal.Parse(dataList[userIndex][2]) + fundsToMove)}";
+        dataList[userIndex][3] = $"{DateTime.Now:MM/dd/yy hh:mm:ss tt} | +${fundsToMove,-8:F2} | Resulting Balance: ${decimal.Parse(dataList[userIndex][2]) + fundsToMove:F2}";
 }
 
 static int displayTransactionHistory(List<List<string>> dataList, int userIndex)
 {
     drawHeader();
     Console.WriteLine($"Transaction History for {dataList[userIndex][0]}:");
+    Console.WriteLine($"Current Balance: ${decimal.Parse(dataList[userIndex][2]):F2}\n");
     // start at index 3, where transaction history starts
     for (int index = 3; index < dataList[userIndex].Count; index++)
     {

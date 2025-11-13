@@ -1,4 +1,4 @@
 mlewellen,12345,45000.00
 jallen,54321,15.00
 gsorensen,42914,140.00
-jolvera,09876,32.00,11/12/25 - 6:22:07 PM - Withdrawal of $5.00, remaining balance: $32.00,11/12/25 - 6:21:02 PM - Deposit of $2.00, new balance: $37.00,11/12/25 - 6:20:14 PM - Deposit of $20, new balance: $35.00,11/12/25 - 6:20:08 PM - Withdrawal of $5, remaining balance: $15.00
+jolvera,09876,50.00
