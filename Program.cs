@@ -15,7 +15,60 @@ if (userIndex == -1)
 }
 else
 {
-    bankMenu(customerDataBase, 0, userIndex);
+    int requestedMenu = 0;
+    while (requestedMenu != 7)
+    {
+        requestedMenu = mainMenu(customerDataBase, userIndex);
+        switch (requestedMenu)
+        {
+            case 1:
+                requestedMenu = checkBalance(customerDataBase, userIndex);
+                break;
+            case 2:
+                (requestedMenu, decimal fundsToWithdraw) = withdrawFunds(customerDataBase, userIndex);
+                if (fundsToWithdraw > 0)
+                {
+                    customerDataBase[userIndex][2] = Convert.ToString(decimal.Parse(customerDataBase[userIndex][2]) - fundsToWithdraw);
+                    saveBankCustomers("bank.txt", customerDataBase);
+                }
+                //A little theater to make it look nice
+                Console.Clear();
+                Console.WriteLine("Dispensing funds...");
+                Thread.Sleep(2000);
+                Console.Clear();
+                Console.WriteLine($"Funds dispensed. Your new balance is: $ {customerDataBase[userIndex][2]}");
+                Console.WriteLine("Press any key to continue.");
+                Console.ReadKey(true);
+                break;
+            case 3:
+                (requestedMenu, decimal fundsToDeposit) = depositFunds(customerDataBase, userIndex);
+                if (fundsToDeposit > 0)
+                {
+                    customerDataBase[userIndex][2] = Convert.ToString(decimal.Parse(customerDataBase[userIndex][2]) + fundsToDeposit);
+                    saveBankCustomers("bank.txt", customerDataBase);
+                }
+                Console.Clear();
+                Console.WriteLine("Depositing funds...");
+                Thread.Sleep(2000);
+                Console.Clear();
+                Console.WriteLine($"Funds deposited. Your new balance is: $ {customerDataBase[userIndex][2]}");
+                Console.WriteLine("Press any key to continue.");
+                Console.ReadKey(true);
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            case 7:
+                break;
+            default:
+                break;
+
+        }
+    }
+    Console.WriteLine(requestedMenu);
 }
 
 static List<List<string>> loadBankCustomers(string filepath)
@@ -137,15 +190,6 @@ static void drawHeader()
     Console.WriteLine();
 }
 
-static void bankMenu(List<List<string>> dataList, int requestedMenu, int userIndex)
-{
-    while (requestedMenu == 0)
-    {
-        requestedMenu = mainMenu(dataList, userIndex);
-    }
-    Console.WriteLine(requestedMenu);
-}
-
 static int mainMenu(List<List<string>> dataList, int userIndex)
 {
     string[] mainMenuArray = [  $"Welcome to your The Bank\u2122 account, {dataList[userIndex][0]}!",
@@ -159,7 +203,8 @@ static int mainMenu(List<List<string>> dataList, int userIndex)
                                 "7. End current session"
                             ];
     int firstOptionIndex = 2;
-    return optionSelector(mainMenuArray, firstOptionIndex);
+    // Return selected option, offset by 1 to account for index
+    return optionSelector(mainMenuArray, firstOptionIndex) - 1;
 }
 
 static int optionSelector(string[] menuArray, int firstOptionIndex)
@@ -194,4 +239,96 @@ static int optionSelector(string[] menuArray, int firstOptionIndex)
         else
             Console.Beep();
     }
+}
+
+// Just makes sure we get a proper value, actual value checking is in the methods calling this
+// Returns a bool and a value, if they enter 0, it will be a success
+static (bool parseSuccess, decimal fundsInput) handleMoneyInput()
+{
+    string stringInput = Console.ReadLine();
+    if (String.IsNullOrEmpty(stringInput) == false)
+    {
+        bool parseSuccess = decimal.TryParse(stringInput, out decimal parseOut);
+        if (parseSuccess == true)
+            return (true, parseOut);
+    }
+    return (false, 0);
+}
+
+// Main Menu Function Methods
+
+// Just shows the balance and kicks us back to the main menu
+static int checkBalance(List<List<string>> dataList, int userIndex)
+{
+    drawHeader();
+    Console.WriteLine($"{dataList[userIndex][0]}, your current balance is: $ {dataList[userIndex][2]}\n Please press any key to return to the main menu.");
+    Console.ReadKey(true);
+    return 0;
+}
+
+// Collect an amount from the user and return 0 for main menu and the amount
+static (int requestedMenu, decimal fundsToWithdraw) withdrawFunds(List<List<string>>dataList, int userIndex)
+{
+    bool parseSuccess = false;
+    decimal fundsToWithdraw = 0;
+    while (parseSuccess == false)
+    {
+        drawHeader();
+        Console.WriteLine($"{dataList[userIndex][0]}, your current balance is: $ {dataList[userIndex][2]}\nPlease enter an amount to withdraw that is less than or equal to your current balance.");
+        (parseSuccess, fundsToWithdraw) = handleMoneyInput();
+        // Value can't be less than 0
+        if (parseSuccess == true && fundsToWithdraw < 0)
+        {
+            parseSuccess = false;
+            Console.WriteLine("Please enter a positive amount.");
+            Thread.Sleep(1300);
+        }
+        // Value can't be less than what they have in the account, no overdrafts
+        else if (parseSuccess == true && fundsToWithdraw > decimal.Parse(dataList[userIndex][2]))
+        {
+            parseSuccess = false;
+            Console.WriteLine("That amount is more than your current balance.\nPlease enter an amount that is less than or equal to your current balance.");
+            Thread.Sleep(1300);
+        }
+        // Only returns to the main menu with a value if it is correctly parsed, not negative, and less than or equal to their balance
+        else if (parseSuccess == true && fundsToWithdraw <= decimal.Parse(dataList[userIndex][2]))
+            return (0, fundsToWithdraw);
+        // Catch for something that's not in the above cases
+        else
+        {
+            parseSuccess = false;
+            Console.WriteLine("That input wasn't properly recognized,\nplease enter an amount to withdraw.");
+            Thread.Sleep(1300);
+        }
+    }
+    //Default path
+    return (0, fundsToWithdraw);
+}
+
+static (int requestedMenu, decimal fundsToDeposit) depositFunds(List<List<string>>dataList, int userIndex)
+{
+    bool parseSuccess = false;
+    decimal fundsToDeposit = 0;
+    while (parseSuccess == false)
+    {
+        drawHeader();
+        Console.WriteLine($"{dataList[userIndex][0]}, your current balance is: $ {dataList[userIndex][2]}\nPlease enter an amount to withdraw that is less than or equal to your current balance.");
+        (parseSuccess, fundsToDeposit) = handleMoneyInput();
+        if (parseSuccess == true && fundsToDeposit < 0)
+        {
+            parseSuccess = false;
+            Console.WriteLine("Please enter a positive amount.");
+            Thread.Sleep(1300);
+        }
+        else if (parseSuccess == true)
+            return (0, fundsToDeposit);
+        else
+        {
+            parseSuccess = false;
+            Console.WriteLine("That input wasn't properly recognized,\nplease enter an amount to withdraw.");
+            Thread.Sleep(1300);
+        }
+    }
+    //Default path
+    return (0, fundsToDeposit);
 }

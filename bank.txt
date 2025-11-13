@@ -1,4 +1,4 @@
 mlewellen,12345,45000.00
 jallen,54321,15.00
 gsorensen,42914,140.00
-jolvera,09876,50.00
+jolvera,09876,20.00
