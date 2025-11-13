@@ -5,7 +5,13 @@ Console.Clear();
 Console.WriteLine("The Bank\u2122's ATM");
 Console.WriteLine("~ Where your money is safer ~");
 
-var customerDataBase = loadBankCustomers("bank.txt");
+(var customerDataBase, bool foundDataList) = loadBankCustomers("bank.txt");
+if (foundDataList == false)
+{
+    Console.WriteLine();
+    Console.WriteLine("Couldn't find the database, is Amazon Web Services down?");
+    return;
+}
 
 // Login
 int userIndex = validateUser(customerDataBase);
@@ -137,10 +143,16 @@ else
 // Methods
 
 // Loads csv into a list of lists of strings, splits by ,
-static List<List<string>> loadBankCustomers(string filepath)
+static (List<List<string>> dataList, bool foundDataList) loadBankCustomers(string filepath)
 {
-    var listOfLists = File.ReadAllLines(filepath).Select(line => line.Split(',').ToList()).ToList();
-    return listOfLists;
+    List<List<string>> dataList = [];
+    if (File.Exists(filepath) == true)
+    {
+        dataList = File.ReadAllLines(filepath).Select(line => line.Split(',').ToList()).ToList();
+        return (dataList, true);
+    }
+    else
+        return (dataList, false);
 }
 
 // Builds a new string with every list of list of strings, creates a list of strings that becomes an array that is saved
